@@ -21,3 +21,9 @@ El Body (Cuerpo): Un objeto JSON con los datos actualizados (userId, title, comp
 
 3. ¿En qué momento debe actualizarse el DOM?
 RTA: Bajo la arquitectura que estamos manejando con procesos asíncronos (async/await), el DOM debe actualizarse solo después de recibir una respuesta exitosa del servidor.
+
+
+Parte 2: Implementación Guiada
+2. Listar tareas (READ)
+¿En qué momento se transforman los datos JSON en elementos HTML?
+rta: Los datos dejan de ser JSON y se convierten en HTML en el preciso instante en que el navegador ejecuta el appendChild. A partir de ese segundo, el navegador interpreta esos nodos y los dibuja siguiendo las reglas de mis estilos CSS.
