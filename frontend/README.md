@@ -40,3 +40,90 @@ rta: El ID es fundamental porque es la única referencia inequívoca que permite
 ¿Qué diferencia existe entre modificar un dato en el DOM y modificarlo en el servidor?
 
 rta: Si solo modificamos el DOM, nuestra aplicación olvidaria todo al recargar. Si solo modificamos el servidor pero no el DOM, el usuario pensará que la aplicación no funciona porque no verá el cambio reflejado.
+
+
+Parte 3: Identificación del Ciclo Completo
+
+Cuando terminen, elaboren un pequeño esquema donde representen:
+• Acción del usuario.
+• Evento capturado en JavaScript.
+• Solicitud HTTP enviada.
+• Respuesta del servidor.
+• Actualización del DOM.
+rta:
+
+1. Operación: LISTAR (READ)
+        |
+        |
+Usuario (Carga la página o pulsa un filtro)      
+        |
+        |
+JS (Evento DOMContentLoaded o click capturado)      
+        |
+        |
+Fetch/HTTP (Solicitud GET a /tasks)      
+        |
+        |
+Servidor (Lee db.json y responde con el array de tareas)
+        |
+        |
+JS (Recibe el JSON y ejecuta renderizarTareas)
+        |
+        |
+DOM (Se crean y muestran las tarjetas de las tareas en el HTML)
+
+2. Operación: CREAR (CREATE)
+Usuario (Llena el formulario y clic en "Guardar") 
+        |
+        |
+JS (Evento submit capturado y validado)      
+        |
+        |
+Fetch/HTTP (Solicitud POST con el objeto JSON de la nueva tarea) 
+        |
+        |
+Servidor (Escribe en db.json y responde con la tarea creada + ID)      
+        |
+        |
+JS (Recibe confirmación y actualiza el array local tasks)
+        |
+        |
+DOM (La nueva tarea aparece al final de la lista visualmente)
+
+3. Operación: ACTUALIZAR (UPDATE)
+Usuario (Clic en "Editar", cambia datos y clic en "Actualizar")      
+        |
+        |
+JS (Evento submit capturado detectando el ID en edición)      
+        |
+        |
+Fetch/HTTP (Solicitud PUT a /tasks/{id} con los datos nuevos)      
+        |
+        |
+Servidor (Busca el ID, sobreescribe en db.json y responde exitoso)      
+        |
+        |
+JS (Actualiza el objeto dentro del array tasks y limpia el formulario)     
+        |
+        |
+DOM (La tarjeta de la tarea muestra la información actualizada)
+
+
+4. Operación: ELIMINAR (DELETE)
+Usuario (Clic en "Eliminar" y confirma en el aviso)   
+        |
+        |
+JS (Evento click capturado en el botón de la tarjeta)         
+        |
+        |
+Fetch/HTTP (Solicitud DELETE a /tasks/{id})     
+        |
+        |
+Servidor (Borra el registro en db.json y responde con éxito)     
+        |
+        |
+JS (Filtra el array local y ejecuta .remove() en el elemento)     
+
+        |
+        |
+DOM (La tarjeta de la tarea desaparece de la sección de mensajes)
