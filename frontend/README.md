@@ -127,3 +127,28 @@ JS (Filtra el array local y ejecuta .remove() en el elemento)     
         |
         |
 DOM (La tarjeta de la tarea desaparece de la sección de mensajes)
+
+
+Reflexión Final
+
+Al finalizar, respondan:
+• ¿Qué operación les resultó más sencilla?
+rta: La operación más sencilla fue el READ (Listar). Una vez que se entiende cómo funciona la petición GET, el proceso es muy lineal: pedir los datos y recorrer el array con un forEach. No requiere enviar cuerpos complejos de datos (body) ni manejar estados complicados de edición, simplemente es "traer y mostrar".
+
+
+• ¿Cuál fue la más compleja y por qué?
+rta: La operación más compleja fue el UPDATE (Actualizar). Esto se debe a que requiere coordinar varios momentos:
+
+Capturar el ID de la tarea específica al hacer clic en "Editar".
+
+"Viajar" con esos datos de vuelta al formulario (mapear el JSON a los inputs).
+
+Cambiar la lógica del botón de envío para que reconozca que no debe crear algo nuevo, sino modificar lo existente.
+
+Manejar la persistencia tanto en el servidor como en el array local para que la vista se actualice correctamente.
+
+• ¿En qué parte del ciclo sintieron mayor dificultad: en la comunicación con la API o
+en la manipulación del DOM?
+rta: La mayor dificultad que se me presento fue en la manipulación del DOM.
+
+Aunque la API tiene su complejidad con la asincronía (async/await), una vez que la ruta y el método están claros, el comportamiento es predecible. En cambio, la manipulación del DOM implica gestionar eventos, crear elementos desde cero (createElement), limpiar nodos antiguos para no duplicar información y asegurarse de que los selectores (IDs y clases) coincidan exactamente con el HTML. Un pequeño error al capturar un input (como el TypeError que tuvimos al principio) puede detener toda la aplicación.
