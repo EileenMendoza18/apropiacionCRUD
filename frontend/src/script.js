@@ -1,9 +1,11 @@
-import { get, post, deleteData } from "./index.js";
+import { get, post, deleteData, updateData } from "./index.js";
+
 // --- ELEMENTOS DEL DOM ---
 const botonVisualizar = document.getElementById('miBoton');
 const formulario = document.getElementById('caja');
 const seccionMensaje = document.getElementById('section');
 const h2 = document.getElementById('section__div');
+const botonGuardar = document.getElementById('guardar'); // Botón del submit
 const inputId = document.querySelector(".inputID");
 const inputTarea = document.getElementById("inputTarea");
 const inputEstado = document.getElementById("inputEstado");
@@ -16,10 +18,11 @@ const buttonActive = document.createElement("button");
 const buttonInactive = document.createElement("button");
 const contador = document.createElement("p");
 
-// --- ESTADO INICIAL ---
+// --- ESTADO ---
 let tasks = await get('tasks');
+let tareaEnEdicionId = null; // Variable para controlar si editamos o creamos
 
-// --- FUNCIONES DE VALIDACIÓN Y ERROR ---
+// --- FUNCIONES DE APOYO ---
 function showError(errorElement, message) {
     errorElement.textContent = message;
 }
@@ -39,7 +42,7 @@ function isValidInput(input, message, errorElement) {
     return true;
 }
 
-// --- RENDERIZADO Y ELIMINACIÓN ---
+// --- RENDERIZADO (READ, UPDATE, DELETE) ---
 function renderizarTareas(listaFiltrada) {
     const tarjetasViejas = document.querySelectorAll('.tarjetaDiv');
     tarjetasViejas.forEach(tarjeta => tarjeta.remove());
@@ -47,60 +50,62 @@ function renderizarTareas(listaFiltrada) {
     listaFiltrada.forEach(element => {
         const tarjetaDiv = document.createElement("div");
         tarjetaDiv.classList.add("tarjetaDiv");
+
         const h3 = document.createElement("h3");
         h3.textContent = `Tarea: ${element.title}`;
+
         const p = document.createElement("p");
         p.textContent = `Usuario Asignado: ${element.userId}`;
 
-        // --- 4. ELIMINAR TAREA (DELETE) ---
+        // BOTÓN ELIMINAR
         const btnDelete = document.createElement("button");
         btnDelete.textContent = "Eliminar";
         btnDelete.classList.add('button');
-
         btnDelete.addEventListener('click', async () => {
-            // Confirmación antes de eliminar
-            const confirmar = confirm(`¿Estás seguro de eliminar: "${element.title}"?`);
-            
+            const confirmar = confirm(`¿Eliminar "${element.title}"?`);
             if (confirmar) {
                 try {
-                    // Enviar solicitud DELETE al servidor
-                    console.log(`Eliminando tarea con ID: ${element.id}`);
                     await deleteData('tasks', element.id);
-
-                    // Actualizar el estado local (filtrar la tarea borrada)
                     tasks = tasks.filter(t => t.id !== element.id);
-
-                    // Quitar el elemento del DOM
                     tarjetaDiv.remove();
-                    alert("Tarea eliminada correctamente");
-                    
-                    // Actualizar el contador visual
-                    const actuales = tasks.filter(t => t.completed === element.completed);
-                    contador.textContent = `Total: ${actuales.length}`;
-                    
+                    alert("Tarea eliminada");
                 } catch (error) {
-                    console.error('Error al eliminar:', error);
-                    alert("No se pudo eliminar la tarea del servidor");
+                    alert("Error al eliminar");
                 }
             }
+        });
+
+        // --- 5. ACTUALIZAR TAREA (UPDATE - PARTE 1: CARGAR) ---
+        const btnEdit = document.createElement("button");
+        btnEdit.textContent = "Editar";
+        btnEdit.classList.add('button');
+        btnEdit.addEventListener('click', () => {
+            // Desplazar al formulario
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Cargar datos en los inputs
+            inputId.value = element.userId;
+            inputTarea.value = element.title;
+            inputEstado.value = element.completed.toString();
+
+            // Cambiar modo a edición
+            tareaEnEdicionId = element.id;
+            botonGuardar.textContent = "Actualizar Tarea";
+            botonGuardar.style.backgroundColor = "#ff9800"; // Naranja para distinguir
         });
 
         tarjetaDiv.appendChild(h3);
         tarjetaDiv.appendChild(p);
         tarjetaDiv.appendChild(btnDelete);
+        tarjetaDiv.appendChild(btnEdit);
         seccionMensaje.appendChild(tarjetaDiv);
     });
 }
 
-// --- 3. CREAR TAREA (CREATE) ---
-
-/**
- * Captura el evento submit del formulario
- */
+// --- MANEJO DE FORMULARIO (CREATE & UPDATE - PARTE 2: ENVIAR) ---
 async function handleFormSubmit(e) {
     e.preventDefault();
     
-    // Validaciones previas
     const idValido = isValidInput(inputId, 'ID obligatorio', idError);
     const tareaValida = isValidInput(inputTarea, 'Tarea obligatoria', tareaError);
     const estadoValido = isValidInput(inputEstado, 'Estado obligatorio', estadoError);
@@ -120,30 +125,39 @@ async function handleFormSubmit(e) {
             completed: valorEstado === "true"
         };
 
-        // Enviar datos usando POST
-        console.log("Enviando nueva tarea al servidor...");
-        const respuestaServidor = await post('tasks', nuevaData);
-        
-        // Después de la respuesta, actualizamos el array local
-        tasks.push(respuestaServidor);
-        alert("Tarea creada con éxito");
+        if (tareaEnEdicionId) {
+            // MODO ACTUALIZAR (PUT)
+            console.log("Actualizando tarea...");
+            const tareaActualizada = await updateData('tasks', tareaEnEdicionId, nuevaData);
+            
+            // Actualizar array local
+            const index = tasks.findIndex(t => t.id === tareaEnEdicionId);
+            tasks[index] = tareaActualizada;
 
-        // Limpiar formulario
+            alert("Tarea actualizada con éxito");
+            
+            // Resetear modo edición
+            tareaEnEdicionId = null;
+            botonGuardar.textContent = "Guardar tarea";
+            botonGuardar.style.backgroundColor = "";
+        } else {
+            // MODO CREAR (POST)
+            const respuestaServidor = await post('tasks', nuevaData);
+            tasks.push(respuestaServidor);
+            alert("Tarea creada con éxito");
+        }
+
         formulario.reset();
-        
-        // Volver a listar las tareas (actualizar el DOM)
         renderizarTareas(tasks.filter(t => t.completed === nuevaData.completed));
         contador.textContent = `Total: ${tasks.filter(t => t.completed === nuevaData.completed).length}`;
 
     } catch (error) {
-        console.error('Error al crear tarea:', error);
+        console.error('Error en el servidor:', error);
         alert("Error al conectar con el servidor");
     }
 }
 
-// --- EVENTOS ---
-
-// Vinculamos el evento submit
+// --- EVENTOS GENERALES ---
 formulario.addEventListener('submit', handleFormSubmit);
 
 botonVisualizar.addEventListener('click', (e) => {
