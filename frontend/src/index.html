@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div>
+        <h1 class="header__title">Registro de Tareas</h1>
+        <div>
+            <p>Bienvenido a tu gestor de tareas</p>
+            <form action="" id="caja">
+                <h2>Crea tu tarea</h2>
+                <label for="">Ingrese el ID del usuario  asociado: </label>
+                <input type="text" placeholder="Ingrese el ID..." class="inputID" aria-required="true">
+                <span class="form__error" id="idError"></span>
+
+                <label for="">Ingrese el nombre de la tarea: </label>
+                <input type="text" placeholder="Ingrese el nombre..." id="inputTarea">
+                <span class="form__error" id="tareaError"></span>
+
+                <label for="">Ingrese el estado de la tarea: </label>
+                <input type="text" placeholder="Ingrese el estado..." id="inputEstado">
+                <span class="form__error" id="estadoError"></span>
+
+                <button id="guardar"> Guardar tarea</button>
+            </form>
+            <section id="section">
+                <div id="section__div">
+                    <h2>No hay tareas guardadas</h2>
+                </div>
+            </section>
+            <button id="miBoton">Visualizar tareas</button>
+        </div>
+       
+    </div>
+    <script src="script.js" type="module"></script>
+</body>
+</html>

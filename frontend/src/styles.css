@@ -1,0 +1,132 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding: 20px;
+}
+body > div{
+    background-color: rgb(253, 242, 227);
+    border-radius: 20px;
+    width: 90%;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    justify-items: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+h1{
+    font-size: 1.8rem;
+    color: rgb(60, 74, 87);
+}
+
+
+
+.visible{
+    display: flex;
+}
+#miBoton{
+    background-color: rgb(255, 225, 251);
+    border: 1px solid rgb(218, 202, 255);
+    width: 140px;
+    padding: 10px;
+    border-radius: 10px;
+}
+div > div{
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+}
+form{
+    flex-direction: column;
+    width: 90%;
+    gap: 10px;
+}
+
+form input{
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #58585886;
+    padding: 12px;
+    color: #000000af;
+}
+form button{
+    width:110px;
+    padding:10px;
+    border: none;
+    background-color: rgb(195, 154, 233);
+    border-radius: 10px;
+    margin-top:20px;
+}
+input::placeholder{
+    color: #58585886;
+    font-size:0.65rem ;
+}
+
+section{
+    background-color: antiquewhite;
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tarjetaDiv{
+    display: grid   ;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    gap: 20px;
+}
+.tarjetaDiv button{
+    justify-self: end;
+}
+.tarjetaDiv button:nth-child(3){
+    grid-area: 1/2;
+}
+.divButton{
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+    font-size: 0.7rem;
+}
+.button{
+    width: 80px;
+    height: 40px;
+    padding: 10px;
+    background-color: rgb(250, 223, 189);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.none, form, section{
+    display: none;
+}
+.error{
+    border-color: red;
+}
+.form__error {
+    display: block;
+    font-size: 0.7rem;
+    color: red;
+    margin-top: 10px;
+    min-height: 1.25rem;
+}
