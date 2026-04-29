@@ -31,3 +31,7 @@ rta: Los datos dejan de ser JSON y se convierten en HTML en el preciso instante 
 3. Crear tarea (CREATE)
 ¿Qué ocurre primero: se actualiza el DOM o se envía la solicitud al servidor?
 rta: Lo primero que ocurre es el envío de la solicitud al servidor.
+
+4. Eliminar tarea (DELETE)
+¿Por qué es importante el id en esta operación?
+rta: El ID es fundamental porque es la única referencia inequívoca que permite al cliente y al servidor ponerse de acuerdo sobre qué dato específico debe ser procesado, evitando errores de duplicidad o borrado accidental de información incorrecta.
