@@ -27,3 +27,7 @@ Parte 2: Implementación Guiada
 2. Listar tareas (READ)
 ¿En qué momento se transforman los datos JSON en elementos HTML?
 rta: Los datos dejan de ser JSON y se convierten en HTML en el preciso instante en que el navegador ejecuta el appendChild. A partir de ese segundo, el navegador interpreta esos nodos y los dibuja siguiendo las reglas de mis estilos CSS.
+
+3. Crear tarea (CREATE)
+¿Qué ocurre primero: se actualiza el DOM o se envía la solicitud al servidor?
+rta: Lo primero que ocurre es el envío de la solicitud al servidor.
