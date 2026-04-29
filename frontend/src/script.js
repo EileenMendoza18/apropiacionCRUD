@@ -1,5 +1,4 @@
-import { get, post } from "./index.js";
-
+import { get, post, deleteData } from "./index.js";
 // --- ELEMENTOS DEL DOM ---
 const botonVisualizar = document.getElementById('miBoton');
 const formulario = document.getElementById('caja');
@@ -40,7 +39,7 @@ function isValidInput(input, message, errorElement) {
     return true;
 }
 
-// --- RENDERIZADO ---
+// --- RENDERIZADO Y ELIMINACIÓN ---
 function renderizarTareas(listaFiltrada) {
     const tarjetasViejas = document.querySelectorAll('.tarjetaDiv');
     tarjetasViejas.forEach(tarjeta => tarjeta.remove());
@@ -53,8 +52,42 @@ function renderizarTareas(listaFiltrada) {
         const p = document.createElement("p");
         p.textContent = `Usuario Asignado: ${element.userId}`;
 
+        // --- 4. ELIMINAR TAREA (DELETE) ---
+        const btnDelete = document.createElement("button");
+        btnDelete.textContent = "Eliminar";
+        btnDelete.classList.add('button');
+
+        btnDelete.addEventListener('click', async () => {
+            // Confirmación antes de eliminar
+            const confirmar = confirm(`¿Estás seguro de eliminar: "${element.title}"?`);
+            
+            if (confirmar) {
+                try {
+                    // Enviar solicitud DELETE al servidor
+                    console.log(`Eliminando tarea con ID: ${element.id}`);
+                    await deleteData('tasks', element.id);
+
+                    // Actualizar el estado local (filtrar la tarea borrada)
+                    tasks = tasks.filter(t => t.id !== element.id);
+
+                    // Quitar el elemento del DOM
+                    tarjetaDiv.remove();
+                    alert("Tarea eliminada correctamente");
+                    
+                    // Actualizar el contador visual
+                    const actuales = tasks.filter(t => t.completed === element.completed);
+                    contador.textContent = `Total: ${actuales.length}`;
+                    
+                } catch (error) {
+                    console.error('Error al eliminar:', error);
+                    alert("No se pudo eliminar la tarea del servidor");
+                }
+            }
+        });
+
         tarjetaDiv.appendChild(h3);
         tarjetaDiv.appendChild(p);
+        tarjetaDiv.appendChild(btnDelete);
         seccionMensaje.appendChild(tarjetaDiv);
     });
 }
@@ -104,7 +137,7 @@ async function handleFormSubmit(e) {
 
     } catch (error) {
         console.error('Error al crear tarea:', error);
-        alert("No se pudo conectar con el servidor para crear la tarea");
+        alert("Error al conectar con el servidor");
     }
 }
 
