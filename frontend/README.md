@@ -35,3 +35,8 @@ rta: Lo primero que ocurre es el envío de la solicitud al servidor.
 4. Eliminar tarea (DELETE)
 ¿Por qué es importante el id en esta operación?
 rta: El ID es fundamental porque es la única referencia inequívoca que permite al cliente y al servidor ponerse de acuerdo sobre qué dato específico debe ser procesado, evitando errores de duplicidad o borrado accidental de información incorrecta.
+
+5. Actualizar tarea (UPDATE)
+¿Qué diferencia existe entre modificar un dato en el DOM y modificarlo en el servidor?
+
+rta: Si solo modificamos el DOM, nuestra aplicación olvidaria todo al recargar. Si solo modificamos el servidor pero no el DOM, el usuario pensará que la aplicación no funciona porque no verá el cambio reflejado.
